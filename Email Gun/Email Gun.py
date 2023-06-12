@@ -76,7 +76,7 @@ message_text = tk.Text(window, height=10, width=30)
 message_text.pack()
 
 # Create send button
-send_button = tk.Button(window, text="Send Email", command=send_email)
+send_button = tk.Button(window, text="Email Send Kro", command=send_email)
 send_button.pack()
 
 # Start the GUI event loop
