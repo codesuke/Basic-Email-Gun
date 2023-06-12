@@ -1,88 +1,45 @@
+#Imported Libraries That Will be Used
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import tkinter as tk
-from tkinter import messagebox
 
-
-#suske dumbass
-def send_email():
-    sender_email = sender_entry.get()
-    sender_password = password_entry.get()
-    receiver_email = receiver_entry.get()
-    subject = subject_entry.get()
-    message = message_text.get("1.0", "end-1c")
-
-    if not (sender_email and sender_password and receiver_email and subject and message):
-        messagebox.showwarning("Warning", "Please fill in all the fields.")
-        return
-
-    # Create a multipart message
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    msg['Subject'] = subject
-
-    # Add body to email
-    msg.attach(MIMEText(message, 'plain'))
+def send_email(sender_email, sender_password, recipient_email, subject, message):
+    #This is for setting up the SMTP server and make sure u don't fuck around this if u don't know shit 
+    smtp_server = "smtp.gmail.com" #change if you using a different Email Service like Hotmail and BS
+    smpt_port = 587  # For starttls change according to the Email Service this is default for Gmail as per rn
 
     try:
-        # Create a secure SSL/TLS connection to the email server
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-
-        # Login to the email server
+        # For Creating or Establishing a connection to the SMTP server
+        server = smtplib.SMTP(smtp_server,smpt_port)
+        server.starttls() # Secure the connection
         server.login(sender_email, sender_password)
 
-        # Send the email
-        server.sendmail(sender_email, receiver_email, msg.as_string())
+        # Create the email message
+        email_message = MIMEMultipart()
+        email_message["From"] = sender_email
+        email_message["To"] = recipient_email
+        email_message["Subject"] = subject
+        email_message["message"] = message
+        email_message.attach(MIMEText(message, "plain"))
 
-        # Close the connection
+        #Send the email part 
+        server.sendmail(sender_email, sender_password, recipient_email, email_message.as_string())
+        print("Email Sent Successfully o7!!")
+
+    except Exception as e:
+        print(f"An error occurred while sending the mail: {str(e)}")
+    
+    finally:
+        # Close the connection nigga
         server.quit()
 
-        messagebox.showinfo("Success", "Email sent successfully!")
-    except Exception as e:
-        messagebox.showerror("Error", f"An error occurred while sending the email:\n{str(e)}")
+# Example on usage
+sender_email = input("xyz_email@gmail.com": )
+sender_password = input("your_password": )
+recipient_email = input("recipent_email@whatevermailservice.com": )
 
-# Create the GUI window
-window = tk.Tk()
-window.title("Email Sender")
-
-# Create labels and entries for sender's email
-sender_label = tk.Label(window, text="Sender's Email:")
-sender_label.pack()
-sender_entry = tk.Entry(window)
-sender_entry.pack()
-
-# Create labels and entries for sender's password
-password_label = tk.Label(window, text="Password:")
-password_label.pack()
-password_entry = tk.Entry(window, show="*")
-password_entry.pack()
-
-# Create labels and entries for receiver's email
-receiver_label = tk.Label(window, text="Receiver's Email:")
-receiver_label.pack()
-receiver_entry = tk.Entry(window)
-receiver_entry.pack()
-
-# Create labels and entries for email subject
-subject_label = tk.Label(window, text="Subject:")
-subject_label.pack()
-subject_entry = tk.Entry(window)
-subject_entry.pack()
-
-# Create label and text box for email message
-message_label = tk.Label(window, text="Message:")
-message_label.pack()
-message_text = tk.Text(window, height=10, width=30)
-message_text.pack()
-
-# Create send button
-send_button = tk.Button(window, text="Email Send Kro", command=send_email)
-send_button.pack()
-
-# Start the GUI event loop
-window.mainloop()
+subject = input("Enter the subject: ")
+message = input("Enter the message for the Email: ")     
 
 
-#Fuck you BMK
+send_email(sender_email, sender_password, recipient_email, subject, message)
