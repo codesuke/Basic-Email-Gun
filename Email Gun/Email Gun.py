@@ -5,7 +5,6 @@ import tkinter as tk
 from tkinter import messagebox
 
 
-#suske dumbass
 def send_email():
     sender_email = sender_entry.get()
     sender_password = password_entry.get()
@@ -84,5 +83,3 @@ send_button.pack()
 # Start the GUI event loop
 window.mainloop()
 
-
-#Fuck you BMK
